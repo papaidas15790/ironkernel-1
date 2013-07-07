@@ -1,15 +1,17 @@
-use32
+format ELF
 
-global _GLOBAL_OFFSET_TABLE_
-global __morestack
-global abort
-global memcmp
-global memcpy
-global malloc
-global free
-global start
+public _GLOBAL_OFFSET_TABLE_
+public __morestack
+public abort
+public memcmp
+public memcpy
+public malloc
+public free
+public start
 
-extern main
+extrn main
+
+section '.text' executable
 
 start:
     ; rust functions compare esp against [gs:0x30] as a sort of stack guard thing

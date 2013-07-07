@@ -1,7 +1,7 @@
-CC=i386-elf-gcc
-LD=i386-elf-ld
+CC=gcc -m32
+LD=ld -melf_i386
 RUSTC=rustc
-NASM=nasm
+ASM=fasm
 QEMU=qemu-system-i386
 
 all: floppy.img
@@ -16,7 +16,7 @@ all: floppy.img
 	$(RUSTC) -O --target i386-intel-linux --lib -o $@ -c $<
 
 .asm.o:
-	$(NASM) -f elf32 -o $@ $<
+	$(ASM) $< $@
 
 main.rs: zero.rs
 
@@ -24,7 +24,7 @@ floppy.img: loader.bin main.bin
 	cat $^ > $@
 
 loader.bin: loader.asm
-	$(NASM) -o $@ -f bin $<
+	$(ASM) $< $@
 
 main.bin: linker.ld runtime.o main.o
 	$(LD) -o $@ -T $^

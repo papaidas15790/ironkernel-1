@@ -48,11 +48,11 @@ protected_mode:
     use32
     ; load all the other segments with 32 bit data segments
     mov eax, 0x10
-    mov ds, eax
-    mov es, eax
-    mov fs, eax
-    mov gs, eax
-    mov ss, eax
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
     ; set up stack
     mov eax, 0x7bff
     mov esp, eax
@@ -79,14 +79,14 @@ gdt:
     dw 0xffff       ; limit 0:15
     dw 0x0000       ; base 0:15
     db 0x00         ; base 16:23
-    db 0b10011010   ; access byte - code
+    db 10011010b   ; access byte - code
     db 0x4f         ; flags/(limit 16:19). flag is set to 32 bit protected mode
     db 0x00         ; base 24:31
     ; data entry
     dw 0xffff       ; limit 0:15
     dw 0x0000       ; base 0:15
     db 0x00         ; base 16:23
-    db 0b10010010   ; access byte - data
+    db 10010010b   ; access byte - data
     db 0x4f         ; flags/(limit 16:19). flag is set to 32 bit protected mode
     db 0x00         ; base 24:31
 gdt_end:
