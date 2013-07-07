@@ -1,5 +1,7 @@
 use16
 
+include "loader.inc"
+
 org 0x7c00
 
 boot:
@@ -29,7 +31,7 @@ boot:
     or eax, 1
     mov cr0, eax
     ; far jump to load CS with 32 bit segment
-    jmp 0x08:protected_mode
+    jmp (1 shl 3):protected_mode
 
 error:
     mov si, .msg
@@ -44,10 +46,10 @@ error:
     jmp $
     .msg db "could not read disk", 0
 
+use32
 protected_mode:
-    use32
     ; load all the other segments with 32 bit data segments
-    mov eax, 0x10
+    mov eax, (2 shl 3)
     mov ds, ax
     mov es, ax
     mov fs, ax
@@ -73,24 +75,11 @@ idtr:
     dd 0
 
 gdt:
-    ; null entry
-    dq 0
-    ; code entry
-    dw 0xffff       ; limit 0:15
-    dw 0x0000       ; base 0:15
-    db 0x00         ; base 16:23
-    db 10011010b   ; access byte - code
-    db 0x4f         ; flags/(limit 16:19). flag is set to 32 bit protected mode
-    db 0x00         ; base 24:31
-    ; data entry
-    dw 0xffff       ; limit 0:15
-    dw 0x0000       ; base 0:15
-    db 0x00         ; base 16:23
-    db 10010010b   ; access byte - data
-    db 0x4f         ; flags/(limit 16:19). flag is set to 32 bit protected mode
-    db 0x00         ; base 24:31
+    dq 0  ; null entry
+    gdt_entry 0, 0xfffff, PM_32BIT + GRANULARITY, CODE_READ
+    gdt_entry 0, 0xfffff, PM_32BIT + GRANULARITY, DATA_RW
 gdt_end:
 
-times 510-($-$$) db 0
+times 510 - ($-$$) db 0
 db 0x55
 db 0xaa
