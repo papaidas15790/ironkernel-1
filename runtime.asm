@@ -1,12 +1,12 @@
 format ELF
 
-public _GLOBAL_OFFSET_TABLE_
-public __morestack
 public abort
-public memcmp
-public memcpy
-public malloc
-public free
+public abort as '_GLOBAL_OFFSET_TABLE_'
+public abort as '__morestack'
+public abort as 'memcmp'
+public abort as 'memcpy'
+public abort as 'malloc'
+public abort as 'free'
 public start
 
 extrn main
@@ -24,23 +24,5 @@ start:
     rep stosb
     ; jump into rust
     call main
-    jmp $
-
-_GLOBAL_OFFSET_TABLE_:
-
-__morestack:
-
 abort:
-    jmp $
-
-memcmp:
-    jmp $
-
-memcpy:
-    jmp $
-
-malloc:
-    jmp $
-
-free:
     jmp $
