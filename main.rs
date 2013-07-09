@@ -154,6 +154,8 @@ pub unsafe fn main() {
         add eax, 3"
         : "=A"(ptr) ::: "intel");
 
+    (*idt)[KeyboardIRQ] = idt_entry(ptr, 1 << 3, PM32Bit | Present);
+
     let idt_table = 0x100800 as *mut idt_reg;
     *idt_table = idt_reg {
         addr: idt,
@@ -162,4 +164,9 @@ pub unsafe fn main() {
 
     pic_remap();
     pic_enable(KeyboardIRQ);
+
+    asm!("
+        lidt [$0]
+        sti"
+        :: "n"(idt_table) :: "intel");
 }
