@@ -4,6 +4,39 @@
 
 mod zero;
 
+#[inline]
+pub fn size_of_val<T>(_val: *mut T) -> uint {
+    unsafe { zero::size_of::<T>() }
+}
+
+#[packed]
+struct idt_reg {
+    size: u16,
+    addr: *mut [idt_entry, ..256],
+}
+
+static Present: u8 = 1 << 7;
+static PM32Bit: u8 = 1 << 3;
+
+#[packed]
+struct idt_entry {
+    addr_lo: u16,
+    sel: u16,
+    zero: u8,
+    flags: u8,
+    addr_hi: u16
+}
+
+fn idt_entry(proc: u32, sel: u16, flags: u8) -> idt_entry {
+    idt_entry {
+        addr_lo: (proc & 0xffff) as u16,
+        sel: sel,
+        zero: 0,
+        flags: flags | 0b110,
+        addr_hi: (proc >> 16) as u16
+    }
+}
+
 enum Color {
     Black       = 0,
     Blue        = 1,
