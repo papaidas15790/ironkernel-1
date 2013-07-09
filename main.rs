@@ -114,6 +114,14 @@ unsafe fn pic_enable(irq: u8) {
 pub unsafe fn main() {
     clear_screen(LightRed);
 
+    let idt = 0x100000 as *mut [idt_entry, ..256];
+
+    let idt_table = 0x100800 as *mut idt_reg;
+    *idt_table = idt_reg {
+        addr: idt,
+        size: size_of_val(idt) as u16
+    };
+
     pic_remap();
     pic_enable(KeyboardIRQ);
 }
