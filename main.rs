@@ -70,7 +70,50 @@ unsafe fn clear_screen(background: Color) {
     });
 }
 
+static KeyboardIRQ: u8 = 0x20 + 1;
+
+unsafe fn pic_remap() {
+    asm!("
+        mov al, 0x11
+        out 0x20, al
+        out 0xa0, al
+
+        mov al, 0x20
+        out 0x21, al
+        mov al, 0x28
+        out 0xa1, al
+
+        mov al, 4
+        out 0x21, al
+        mov al, 2
+        out 0xa1, al
+
+        mov al, 1
+        out 0x21, al
+        out 0xa1, al
+
+        mov al, 0xff
+        out 0x21, al
+        out 0xa1, al"
+        :::: "intel");
+}
+
+unsafe fn pic_enable(irq: u8) {
+    let port: u16 = if (irq & 0b1000) == 0 { 0x21 } else { 0xa1 };
+    let mask: u8 = !(1u8 << (irq & 0b111));
+
+    asm!("
+        mov dx, $0
+        in al, dx
+        and al, $1
+        out dx, al"
+        :: "r"(port), "r"(mask) : "al", "dx" : "intel")
+}
+
 #[no_mangle]
 pub unsafe fn main() {
     clear_screen(LightRed);
+
+    pic_remap();
+    pic_enable(KeyboardIRQ);
 }
