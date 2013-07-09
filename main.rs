@@ -116,6 +116,44 @@ pub unsafe fn main() {
 
     let idt = 0x100000 as *mut [idt_entry, ..256];
 
+    let mut ptr: u32 = 0;
+
+    asm!("
+        call n
+    n:  pop eax
+        jmp skip
+
+        push gs
+        push fs
+        push es
+        push ds
+        pusha
+
+        xor eax, eax
+        in al, 60h
+        bt ax, 7
+        jb up
+
+    down:
+        jmp end
+
+    up:
+
+    end:
+        mov al, 20h
+        out 0x20, al
+
+        popa
+        pop ds
+        pop es
+        pop fs
+        pop gs
+        iretd
+
+    skip:
+        add eax, 3"
+        : "=A"(ptr) ::: "intel");
+
     let idt_table = 0x100800 as *mut idt_reg;
     *idt_table = idt_reg {
         addr: idt,
