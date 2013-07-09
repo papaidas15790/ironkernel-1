@@ -111,6 +111,36 @@ unsafe fn pic_enable(irq: u8) {
 }
 
 #[no_mangle]
+extern "C" fn keyup(code: u32) { }
+
+#[no_mangle]
+extern "C" fn keydown(code: u32) {
+    // wtf?
+    let char: u8 = "\
+\x00\x1B1234567890-=\x08\
+\tqwertyuiop[]\n\
+\x00asdfghjkl;'`\
+\x00\\zxcvbnm,./\x00\
+*\x00 "[code];
+
+    let screen = 0xb8000 as *mut [u16, ..2000];
+    // mutable statics are incorrectly dereferenced!
+    static mut pos: u32 = 0x10000;
+
+    unsafe {
+        if char == 8 && pos > 0 {
+            pos -= 1;
+            (*screen)[pos] &= 0xff00;
+        } else if char == '\n' as u8 {
+            pos += 80 - pos % 80;
+        } else {
+            (*screen)[pos] |= char as u16;
+            pos += 1;
+        }
+    }
+}
+
+#[no_mangle]
 pub unsafe fn main() {
     clear_screen(LightRed);
 
@@ -135,9 +165,15 @@ pub unsafe fn main() {
         jb up
 
     down:
+        push eax
+        call keydown
+        add esp, 4
         jmp end
 
     up:
+        push eax
+        call keyup
+        add esp, 4
 
     end:
         mov al, 20h
