@@ -4,17 +4,20 @@
 use core::mem::size_of;
 use core::ptr::set_memory;
 use core::option::Some;
+use core;
 
 use kernel::heap;
 use kernel::memory::physical;
 use kernel;
 
-static CACHE:  u32 = 1 << 3;
-static BUFFER: u32 = 1 << 2;
+define_flags!(Flags: u32 {
+    SECTION = 0b10010,
 
-pub static SECTION: u32 = 0b10010;
-pub static RW:      u32 = 1 << 10;
-pub static USER:    u32 = 1 << 11;
+    BUFFER = 1 << 2,
+    CACHE,
+    RW     = 1 << 10,
+    USER
+})
 
 #[packed]
 struct Descriptor(u32);
@@ -36,16 +39,33 @@ pub unsafe fn init() {
     (*dir).enable();
 }
 
-#[allow(unused_variable)]
-pub unsafe fn map(page_ptr: *mut u8, flags: u32) {
+pub unsafe fn map(page_ptr: *mut u8, flags: Flags) {
     // TODO
 }
 
 impl Descriptor {
-    fn section(base: u32, flags: u32) -> Descriptor {
+    fn section(base: u32, flags: Flags) -> Descriptor {
         // make a section descriptor
         //                /permissions
-        Descriptor(base | flags | SECTION)
+        Descriptor(base) | flags | SECTION
+    }
+}
+
+impl core::ops::BitOr<Flags, Descriptor> for Descriptor {
+    #[inline(always)]
+    fn bitor(&self, other: &Flags) -> Descriptor {
+        match (self, other) {
+            (&Descriptor(p), &Flags(f)) => Descriptor(p | f)
+        }
+    }
+}
+
+impl core::ops::BitAnd<Flags, bool> for Descriptor {
+    #[inline(always)]
+    fn bitand(&self, other: &Flags) -> bool {
+        match (self, other) {
+            (&Descriptor(p), &Flags(f)) => p & f != 0
+        }
     }
 }
 

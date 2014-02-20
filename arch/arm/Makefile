@@ -36,14 +36,11 @@ all: $(BDIR)/kernel.bin
 
 # Library rust-core
 $(LCORE):
-	$(RUSTC) $(RUSTCFLAGS) --dep-info $(@D)/core.d $(CORE_LIB) --out-dir $(BDIR)
-
-$(BDIR)/core.bc: $(LCORE)
-	cd $(@D); ar -x $(<F) $(@F)
+	$(RUSTC) $(RUSTCFLAGS) --dep-info $(@D)/core.d $(CORE_LIB) --emit=bc,link --out-dir $(BDIR)
 
 # Compile rustboot
 $(BDIR)/main.bc: ../../lib.rs $(MODS) $(LCORE)
-	$(RUSTC) $(RUSTCFLAGS) --dep-info $(@D)/main.d -L $(BDIR) --emit-llvm ../../lib.rs --out-dir $(BDIR)
+	$(RUSTC) $(RUSTCFLAGS) --dep-info $(@D)/main.d -L $(BDIR) --emit=bc ../../lib.rs --out-dir $(BDIR)
 
 %.s: %.bc
 	$(LLC) $(LLCFLAGS) $^ -o $@
