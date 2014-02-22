@@ -218,11 +218,11 @@ struct cstr {
 impl cstr {
 	pub unsafe fn new(size: uint) -> cstr {
 		// Sometimes this doesn't allocate enough memory and gets stuck...
-		let (x, y) = heap.alloc(size);
+		let p = heap::alloc(size);
 		let this = cstr {
-			p: x,
+			p: p,
 			p_cstr_i: 0,
-			max: y
+			max: size
 		};
 		*(((this.p as uint)+this.p_cstr_i) as *mut char) = '\0';
 		this
@@ -243,7 +243,7 @@ impl cstr {
 	// HELP THIS DOESN'T WORK THERE IS NO GARBAGE COLLECTION!!!
 	// -- TODO: exchange_malloc, exchange_free
 #[allow(dead_code)]
-	unsafe fn destroy(&self) { heap.free(self.p); }
+	unsafe fn destroy(&self) { heap::free(self.p); }
 
 	unsafe fn add_char(&mut self, x: u8) -> bool{
 		if (self.p_cstr_i == self.max) { return false; }

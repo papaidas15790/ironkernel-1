@@ -6,7 +6,7 @@
 #[crate_type = "lib"];
 // Forked from pczarn/rustboot
 #[no_std];
-#[feature(asm, globs, macro_rules)];
+#[feature(asm, globs, macro_rules, default_type_params)];
 
 extern mod core;
 
