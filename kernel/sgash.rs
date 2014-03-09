@@ -31,7 +31,7 @@ fn putstr(msg: &str) {
 }
 
 pub unsafe fn drawstr(msg: &str) {
-    let mut old_fg = super::super::io::FG_COLOR;
+    let old_fg = super::super::io::FG_COLOR;
     let mut x: u32 = 0x6699AAFF;
     for c in slice::iter(as_bytes(msg)) {
 	x = (x << 8) + (x >> 24); 
@@ -56,14 +56,14 @@ pub unsafe fn parsekey(x: char) {
 	// Set this to false to learn the keycodes of various keys!
 	// Key codes are printed backwards because life is hard
 		
-	if (true) {
+	if true {
 		match x { 
 			13		=>	{ 
 						parse();
 						prompt(false); 
 			}
 			127		=>	{ 
-				if (buffer.delete_char()) { 
+				if buffer.delete_char() { 
 					putchar('');
 					putchar(' ');
 					putchar(''); 
@@ -71,7 +71,7 @@ pub unsafe fn parsekey(x: char) {
 				}
 			}
 			_		=>	{ 
-				if (buffer.add_char(x)) { 
+				if buffer.add_char(x) { 
 					putchar(x as char);
 					drawchar(x as char);
 				}
@@ -176,20 +176,20 @@ unsafe fn prompt(startup: bool) {
 }
 
 unsafe fn parse() {
-	if (buffer.streq(&"ls")) { 
+	if buffer.streq(&"ls") { 
 	    putstr( &"\na\tb") ;
 	    drawstr( &"\na    b") ;
 	};
 	match buffer.getarg(' ', 0) {
 	    Some(y)        => {
-		if(y.streq(&"cat")) {
+		if y.streq(&"cat") {
 		    match buffer.getarg(' ', 1) {
 			Some(x)        => {
-			    if(x.streq(&"a")) { 
+			    if x.streq(&"a") { 
 				putstr( &"\nHello"); 
 				drawstr( &"\nHello"); 
 			    }
-			    if(x.streq(&"b")) {
+			    if x.streq(&"b") {
 				putstr( &"\nworld!");
 				drawstr( &"\nworld!");
 			    }
@@ -197,7 +197,7 @@ unsafe fn parse() {
 			None        => { }
 		    };
 		}
-		if(y.streq(&"open")) {
+		if y.streq(&"open") {
 		    putstr(&"\nTEST YO");
 		    drawstr(&"\nTEST YO");
 		}
@@ -243,7 +243,7 @@ impl cstr {
 	unsafe fn destroy(&self) { heap.free(self.p); }
 
 	unsafe fn add_char(&mut self, x: u8) -> bool{
-		if (self.p_cstr_i == self.max) { return false; }
+		if self.p_cstr_i == self.max { return false; }
 		*(((self.p as uint)+self.p_cstr_i) as *mut u8) = x;
 		self.p_cstr_i += 1;
 		*(((self.p as uint)+self.p_cstr_i) as *mut char) = '\0';
@@ -251,7 +251,7 @@ impl cstr {
 	}
 
 	unsafe fn delete_char(&mut self) -> bool {
-		if (self.p_cstr_i == 0) { return false; }
+		if self.p_cstr_i == 0 { return false; }
 		self.p_cstr_i -= 1;
 		*(((self.p as uint)+self.p_cstr_i) as *mut char) = '\0';
 		true
@@ -263,13 +263,13 @@ impl cstr {
 	}
 
 	unsafe fn eq(&self, other: &cstr) -> bool {
-		if (self.len() != other.len()) { return false; }
+		if self.len() != other.len() { return false; }
 		else {
 			let mut x = 0;
 			let mut selfp: uint = self.p as uint;
 			let mut otherp: uint = other.p as uint;
 			while x < self.len() {
-				if (*(selfp as *char) != *(otherp as *char)) { return false; }
+				if *(selfp as *char) != *(otherp as *char) { return false; }
 				selfp += 1;
 				otherp += 1;
 				x += 1;
@@ -282,7 +282,7 @@ impl cstr {
 		let mut x = 0;
 		let mut selfp: uint = self.p as uint;
 		for c in slice::iter(as_bytes(other)) {
-			if( *c != *(selfp as *u8) ) { return false; }
+			if *c != *(selfp as *u8) { return false; }
 			selfp += 1;
 		};
 		*(selfp as *char) == '\0'
@@ -294,22 +294,22 @@ impl cstr {
 		let mut selfp: uint = self.p as uint;
 		let mut s = cstr::new(256);
 		loop {
-			if (*(selfp as *char) == '\0') { 
+			if *(selfp as *char) == '\0' { 
 				// End of string
 				if (found) { return Some(s); }
 				else { return None; }
 			};
-			if (*(selfp as *u8) == delim as u8) { 
+			if *(selfp as *u8) == delim as u8 { 
 				if (found) { return Some(s); }
 				k -= 1;
 			};
-			if (found) {
+			if found {
 				s.add_char(*(selfp as *u8));
 			};
 			found = k == 0;
 			selfp += 1;
 			ind += 1;
-			if (ind == self.max) { 
+			if ind == self.max { 
 				putstr(&"\nSomething broke!");
 				return None; 
 			}
@@ -322,16 +322,16 @@ impl cstr {
 		let mut end = cstr::new(256);
 		let mut found = false;
 		loop {
-			if (*(selfp as *char) == '\0') { 
+			if *(selfp as *char) == '\0' { 
 				return (beg, end);
 			}
-			else if (*(selfp as *u8) == delim as u8) {
+			else if *(selfp as *u8) == delim as u8 {
 				found = true;
 			}
-			else if (!found) {
+			else if !found {
 				beg.add_char(*(selfp as *u8));
 			}
-			else if (found) {
+			else if found {
 				end.add_char(*(selfp as *u8));
 			};
 			selfp += 1;

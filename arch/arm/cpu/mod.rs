@@ -2,9 +2,7 @@ pub mod interrupt;
 pub mod mmu;
 
 pub fn init() {
-    unsafe {
-        // mmu::init();
-    }
+    // mmu::init();
 }
 
 pub fn info() {

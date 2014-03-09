@@ -1,10 +1,4 @@
-use core::mem::size_of;
-use core::ptr::set_memory;
-use core::option::Some;
-
-use kernel::heap;
 use kernel::memory::physical;
-use kernel;
 
 static CACHE:  u32 = 1 << 3;
 static BUFFER: u32 = 1 << 2;

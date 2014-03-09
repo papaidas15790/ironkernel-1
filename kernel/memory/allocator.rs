@@ -58,7 +58,7 @@ impl BitvTrait for Bitv {
     fn set(&self, i: uint, x: Node) {
         let w = i / 16;
         let b = (i % 16) * 2;
-        unsafe { (*self.storage)[w] = (((*self.storage)[w] & !(3 << b)) | (x as u32 << b)); }
+        unsafe { (*self.storage)[w] = ((*self.storage)[w] & !(3 << b)) | (x as u32 << b); }
     }
 
     #[inline]
@@ -92,9 +92,7 @@ impl BuddyAlloc {
 
     #[inline]
     fn offset(&self, index: uint, level: uint) -> uint {
-        unsafe {
             (index + 1 - (1 << (self.order - level))) << level
-        }
     }
 
     fn alloc(&mut self, mut size: uint) -> (uint, uint) {
@@ -213,7 +211,7 @@ impl BuddyAlloc {
 }
 
 impl Allocator for Alloc {
-    fn alloc(&mut self, mut size: uint) -> (*mut u8, uint) {
+    fn alloc(&mut self, size: uint) -> (*mut u8, uint) {
         let (offset, size) = self.parent.alloc(size);
         unsafe {
             return (
@@ -224,7 +222,7 @@ impl Allocator for Alloc {
     }
 
     fn free(&mut self, ptr: *mut u8) {
-        let mut length = 1 << self.parent.order << self.el_size;
+        let length = 1 << self.parent.order << self.el_size;
 
         unsafe {
             if ptr < self.base || ptr >= mut_offset(self.base, length) {

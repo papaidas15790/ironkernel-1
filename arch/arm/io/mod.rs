@@ -1,8 +1,6 @@
 /* io::mod.rs */
 
-use core::option::Some;
 use core::mem::volatile_store;
-use super::drivers;
 use kernel::sgash;
 
 mod font;
@@ -39,7 +37,7 @@ pub unsafe fn init(width: u32, height: u32)
 
     // 800x600
     // See http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0225d/CACCCFBF.html
-    if (SCREEN_WIDTH == 800 && SCREEN_HEIGHT == 600)
+    if SCREEN_WIDTH == 800 && SCREEN_HEIGHT == 600
     {
     	ws(0x10000010, 0x2CAC);
     	ws(0x10120000, 0x1313A4C4);
@@ -55,7 +53,7 @@ pub unsafe fn init(width: u32, height: u32)
 
     // 640x480
     // See http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0225d/CACCCFBF.html
-    else if (SCREEN_WIDTH == 640 && SCREEN_HEIGHT == 480)
+    else if SCREEN_WIDTH == 640 && SCREEN_HEIGHT == 480
     {
 	ws(0x10000010, 0x2C77);
 	ws(0x10120000, 0x3F1F3F9C);
