@@ -3,7 +3,7 @@ TARGET := arm-linux-noeabi
 GCC_PREFIX := $(GCC_PREFIX)arm-none-eabi-
 
 RUSTC := $(RUST_ROOT)/bin/rustc
-RUSTCFLAGS := -O --target $(TARGET) -Z no-landing-pads -Z debug-info -Z extra-debug-info
+RUSTCFLAGS := -O --target $(TARGET) -Z no-landing-pads
 
 AS := $(GCC_PREFIX)as
 LD := $(GCC_PREFIX)ld
@@ -42,7 +42,7 @@ $(BDIR)/core.bc: $(LCORE)
 
 # Compile rustboot
 $(BDIR)/main.bc: ../../lib.rs $(MODS) $(LCORE)
-	$(RUSTC) $(RUSTCFLAGS) --dep-info $(@D)/main.d -L $(BDIR) --emit-llvm ../../lib.rs --out-dir $(BDIR)
+	$(RUSTC) $(RUSTCFLAGS) --dep-info $(@D)/main.d -L $(BDIR) --emit bc ../../lib.rs --out-dir $(BDIR)
 
 %.s: %.bc
 	$(LLC) $(LLCFLAGS) $^ -o $@

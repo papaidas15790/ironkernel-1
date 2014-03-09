@@ -14,7 +14,7 @@ pub fn init() {
     }
 }
 
-pub static mut keydown: Option<extern unsafe fn(char)> = None;
+pub static mut keydown: Option<unsafe fn(char)> = None;
 pub static mut read_char: Option<extern fn()->char> = None;
 
 #[no_mangle]
