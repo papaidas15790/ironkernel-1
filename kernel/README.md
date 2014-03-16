@@ -7,8 +7,6 @@ kernel/
 │   ├── mod.rs
 │   └── virtual.rs
 ├── mod.rs      Kernel
-├── int.rs      Integer
-├── ptr.rs      Pointer (mut_offset)
 ├── README.md   this document
 └── rt.rs       Runtime
 ```
