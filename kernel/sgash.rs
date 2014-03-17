@@ -2,7 +2,7 @@
 #[allow(unused_imports)];
 use core::*;
 use core::str::*;
-use core::option::{Some, Option, None}; // Match statement
+use core::option::{Some, Option, None}; 
 use core::iter::Iterator;
 use kernel::*;
 use super::super::platform::*;
@@ -22,7 +22,7 @@ pub fn putchar(key: char) {
 fn putstr(msg: &str) {
     for c in slice::iter(as_bytes(msg)) {
 	putchar(*c as char);
-    }
+    }	
 }
 
 pub unsafe fn drawstr(msg: &str) {
@@ -43,7 +43,7 @@ unsafe fn drawchar(x: char)
 	io::CURSOR_Y += io::CURSOR_HEIGHT;
 	io::CURSOR_X = 0u32;
     } else {
-	io::draw_char(x);
+	io::draw_char(x);	
 	io::CURSOR_X += io::CURSOR_WIDTH;
     }
     io::backup();
@@ -87,7 +87,6 @@ pub unsafe fn parsekey(x: char) {
 }
 
 fn screen() {
-
     putstr(&"\n                                                               "); 
     putstr(&"\n                                                               ");
     putstr(&"\n                       7=..~$=..:7                             "); 
@@ -119,7 +118,7 @@ fn screen() {
     putstr(&"\n          ,ZZZZZ..~Z$.             .7Z:..ZZZZZ:                ");
     putstr(&"\n          ~7+:$ZZZZZZZZI=:.   .,=IZZZZZZZ$Z:=7=                ");
     putstr(&"\n              $$ZZZZZZZZZZZZZZZZZZZZZZ$ZZZZ                    ");
-    putstr(&"\n              ==..$ZZZ$ZZZZZZZZZZZ$ZZZZ .~+                    "); 			
+    putstr(&"\n              ==..$ZZZ$ZZZZZZZZZZZ$ZZZZ .~+                    ");
     putstr(&"\n                  I$?.?ZZZ$ZZZ$ZZZI =$7                        ");
     putstr(&"\n                       $7..I$7..I$,                            ");
     putstr(&"\n"); 
@@ -127,9 +126,8 @@ fn screen() {
     putstr(&"\n| |                   (_)   | |                       | | ");
     putstr(&"\n| | ____ ___  ____     _____| |_____  ____ ____  _____| | ");
     putstr(&"\n| |/ ___) _ \\|  _ \\   |  _   _) ___ |/ ___)  _ \\| ___ | | ");
-putstr(&"\n| | |  | |_| | | | |  | |  \\ \\| ____| |   | | | | ____| | ");
-putstr(&"\n|_|_|  \\____/|_| |_|  |_|   \\_\\_____)_|   |_| |_|_____)__)\n\n");
-
+    putstr(&"\n| | |  | |_| | | | |  | |  \\ \\| ____| |   | | | | ____| | ");
+    putstr(&"\n|_|_|  \\____/|_| |_|  |_|   \\_\\_____)_|   |_| |_|_____)__)\n\n");
 }
 
 pub unsafe fn init() {
