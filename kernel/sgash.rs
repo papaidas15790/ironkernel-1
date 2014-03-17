@@ -1,5 +1,5 @@
 /* kernel::sgash.rs */
-
+#[allow(unused_imports)];
 use core::*;
 use core::str::*;
 use core::option::{Some, Option, None}; // Match statement
@@ -26,7 +26,7 @@ fn putstr(msg: &str) {
 }
 
 pub unsafe fn drawstr(msg: &str) {
-    let mut old_fg = super::super::io::FG_COLOR;
+    let old_fg = super::super::io::FG_COLOR;
     let mut x: u32 = 0x6699AAFF;
     for c in slice::iter(as_bytes(msg)) {
 	x = (x << 8) + (x >> 24); 
