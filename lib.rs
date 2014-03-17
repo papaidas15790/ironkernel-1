@@ -8,13 +8,14 @@
 #[no_std];
 #[feature(asm, globs, macro_rules)];
 
+#[allow(attribute_usage)];
+#[allow(dead_code)];
 extern mod core;
 
 #[cfg(target_arch = "arm")]
 pub use support::{memcpy, memmove};
 
-use platform::{cpu, io, drivers};
-
+use platform::{cpu, io};
 pub mod kernel;
 
 #[cfg(target_arch = "arm")]
