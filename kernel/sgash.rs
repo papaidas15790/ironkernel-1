@@ -45,7 +45,6 @@ unsafe fn drawchar(x: char)
     } else {
 	io::draw_char(x);
 	io::CURSOR_X += io::CURSOR_WIDTH;
-	if io::CURSOR_X >= io::SCREEN_WIDTH {io::CURSOR_X -= io::SCREEN_WIDTH; io::CURSOR_Y += io::CURSOR_HEIGHT}
     }
     io::backup();
     io::draw_cursor();
@@ -79,8 +78,10 @@ pub unsafe fn parsekey(x: char) {
 	    backspace();
 	}
 	_		=>	{ 
-	    putchar(x as char);
-	    drawchar(x as char);
+	    if io::CURSOR_X < io::SCREEN_WIDTH-io::CURSOR_WIDTH {
+		putchar(x as char);
+		drawchar(x as char);
+	    }
 	}
     }
 }
