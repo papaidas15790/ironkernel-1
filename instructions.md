@@ -27,11 +27,26 @@ Before continuing with this assignment, **one member of your team** should:
 
 	    make run
 
-You should see the IronKernel logo, and a QEMU window. The window as of now is only an echo shell - it prints whatever you type into it! In fact, it even has some extra functionality, like handling the backspace and enter key correctly. (Many of the non-printing function keys will freeze your terminal!) 
+You should see the IronKernel logo, and a QEMU window. 
 
-We want to make IronKernel behave more like a terminal so we can eventually run zhtta on it! First we'll have to have a prompt.
+The window as of now is only an echo shell - it prints whatever you type
+into it!  This may not seem very exciting to you if you are used to huge
+and luxurious operating systems like Linux, Mac OS X, and Windows that
+allow users to do things like run programs, connect to the Internet, and
+use a disk drive.  But, if you think about what it takes to go from the
+bare hardware to something that can print when you type, you should find
+it very exciting!  In fact, it even has some extra functionality, like
+handling the backspace and enter key correctly. (Many of the
+non-printing function keys will freeze your terminal, so be glad you are
+running in a simulator!)
 
-> Problem 1. Modify `kernel/sgash.rs` to make it propmt you with sgash whenever the user types enter. (The actual change is simple, but the point of this question is to get you starting to explore the IronKernel code.) 
+We want to make IronKernel behave more like a terminal so we can
+eventually run zhtta on it!  (We don't expect anyone to get that far
+with it this semester though.  Although, feel free to surprise us!)
+
+First we'll have to have a prompt.
+
+> Problem 1. Modify `kernel/sgash.rs` to make it prompt you with sgash whenever the user types enter. (The actual change is simple, but the point of this question is to get you starting to explore the IronKernel code.) 
 
 Strings
 ------
