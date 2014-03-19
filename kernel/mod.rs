@@ -14,15 +14,15 @@ pub mod sgash;
 
 #[cfg(target_word_size = "32")]
 pub mod rt;
-static MEMORY_SIZE : *mut u8 = 0x100_000 as *mut u8;
+static START_ADDRESS : *mut u8 = 0x100_000 as *mut u8;
 static MEMORY_ORDER : uint = 17;
 
 pub static mut heap: memory::Alloc = memory::Alloc {
-    base: MEMORY_SIZE as *mut u8,
+    base: START_ADDRESS as *mut u8,
     el_size: 0,
     parent: memory::BuddyAlloc {
         order: MEMORY_ORDER,
-        tree: memory::Bitv { storage: MEMORY_SIZE as memory::BitvStorage }
+        tree: memory::Bitv { storage: START_ADDRESS as memory::BitvStorage }
     }
 };
 
@@ -31,7 +31,6 @@ pub static mut int_table: Option<interrupt::Table> = None;
 #[lang="start"]
 #[no_mangle]
 pub fn main() {
-    memory::BuddyAlloc::new(MEMORY_ORDER, memory::Bitv { storage: MEMORY_SIZE as memory::BitvStorage });
     let table = interrupt::Table::new();
     unsafe {
         int_table = Some(table);

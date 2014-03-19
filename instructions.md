@@ -91,6 +91,20 @@ However, a filesystem is useless without the ability to travese, write, and read
 
 > Problem 7. Implement ls, cat, cd, rm, mkdir, pwd, and wr for your filesystem. These commands do not have to emulate their more complex bash counterparts. wr will take a file as its first argument and a string as its second argument. It will write the string to the file.
 
+Memory Management
+------
+
+Memory in IronKernel is done using the Buddy Blocks allocation system. This system treats the whole memory as something akin to a binary tree, where each requestion for a segment of memory would involve traversing down the tree until you find a block just big enough to contain it. For example, if your block of memory was 128kb large and you request for an allocation of 26kb, we would divide the memory space into something akin to:
+		    
+	      32kb    32kb        64kb
+	    |xxxxxxx|------|----------------|
+
+and the user would be guarenteed the first block for their allocation. You can read more about this system on Wikipedia or any other reputable OS textbook.
+
+Even though we have give you the code for the Buddy Block allocation system, there's a fatal bug in it! Whenever space is reclaimed, our code fails to reclaim it correctly.
+
+> Problem 8. Identify the bug with the Buddy Block allocation system and fix it. (Hint: What is the correct behavior of the memory manager when two adjacent blocks are both reclaimed and free?)
+
 Improving IronKernel
 ------
 
