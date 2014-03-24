@@ -6,15 +6,18 @@
 #[crate_type = "lib"];
 // Forked from pczarn/rustboot
 #[no_std];
-#[feature(asm, globs, macro_rules, default_type_params)];
+#[feature(asm, globs, macro_rules, default_type_params, phase)];
 
-extern mod core;
+#[phase(syntax, link)]
+extern crate core;
 
 #[cfg(target_arch = "arm")]
 pub use support::{memcpy, memmove};
 
+use kernel::util;
 use platform::{cpu, io};
 pub mod kernel;
+mod macros;
 
 #[cfg(target_arch = "arm")]
 #[path = "rust-core/support.rs"]
