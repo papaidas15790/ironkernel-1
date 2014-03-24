@@ -4,7 +4,7 @@ use platform::{cpu, io, drivers};
 use cpu::interrupt;
 
 pub mod util;
-pub mod memory;
+pub mod mm;
 pub mod sgash;
 pub mod heap;
 
@@ -14,7 +14,8 @@ pub static mut int_table: Option<interrupt::Table> = None;
 #[no_mangle]
 pub fn main() {
     heap::init();
-    memory::physical::init();
+    mm::physical::init();
+
     let table = interrupt::Table::new();
     unsafe {
         int_table = Some(table);

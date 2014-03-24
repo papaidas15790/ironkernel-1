@@ -7,8 +7,8 @@ use core::option::Some;
 use core;
 
 use kernel::heap;
-use kernel::memory::physical;
-use kernel::memory::physical::Phys;
+use kernel::mm::physical;
+use kernel::mm::physical::Phys;
 
 // use macros;
 
