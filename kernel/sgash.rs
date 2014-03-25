@@ -6,7 +6,6 @@ use core::option::{Some, Option, None}; // Match statement
 use core::iter::Iterator;
 use kernel::*;
 use super::super::platform::*;
-use kernel::mm::Allocator;
 
 pub static mut buffer: cstr = cstr {
 				p: 0 as *mut u8,

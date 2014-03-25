@@ -1,16 +1,9 @@
-#[allow(unused_imports)];
 #[allow(dead_code)];
 
-use core::mem::size_of;
-use core::ptr::set_memory;
-use core::option::Some;
 use core;
 
-use kernel::heap;
 use kernel::mm::physical;
 use kernel::mm::physical::Phys;
-
-// use macros;
 
 pub type Frame = [u8, ..PAGE_SIZE];
 
@@ -27,15 +20,16 @@ define_flags!(Flags: u32 {
 })
 
 #[packed]
-struct Descriptor(u32);
+pub struct Descriptor(u32);
 
 #[packed]
 struct PageTableCoarse {
     pages: [Descriptor, ..256]
 }
 
+#[allow(visible_private_types)]
 #[packed]
-struct PageDirectory {
+pub struct PageDirectory {
     entries: [Descriptor, ..4096]
 }
 
@@ -122,7 +116,7 @@ fn enable_paging() {
     }
 }
 
-pub unsafe fn map(page_ptr: *mut u8, size: uint, flags: Flags) {
+pub unsafe fn map(_: *mut u8, _: uint, _: Flags) {
     // TODO
 }
 
@@ -137,7 +131,7 @@ impl Descriptor {
 impl_ops!(Descriptor, Flags)
 
 impl PageDirectory {
-    pub unsafe fn map(&self, page_ptr: *mut u8, size: uint, flags: Flags) {
+    pub unsafe fn map(&self, _: *mut u8, _: uint, _: Flags) {
         // TODO
     }
 }

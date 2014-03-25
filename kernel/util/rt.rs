@@ -30,43 +30,41 @@ pub fn breakpoint() {
 
 #[cfg(target_endian = "little")]
 #[packed]
-struct udwords {
+struct UdWords {
     low: i32,
     high: i32
 }
 
 #[cfg(target_endian = "big")]
 #[packed]
-struct udwords {
+struct UdWords {
     high: i32,
     low: i32
 }
 
 #[no_mangle]
 pub unsafe fn __mulodi4(a: i64, b: i64, overflow: *mut int) -> i64 {
-    let N: int = 64;
-    let MIN: i64 = (1 as i64) << (N-1);
-    let MAX: i64 = !MIN;
-    // const di_int MIN = (di_int)1 << (N-1);
-    // const di_int MAX = ~MIN;
+    let n: int = 64;
+    let min: i64 = (1 as i64) << (n-1);
+    let max: i64 = !min;
     *overflow = 0;
     let result = a * b;
-    if a == MIN {
+    if a == min {
         if b != 0 && b != 1 { *overflow = 1; }
         return result;
     }
-    if b == MIN {
+    if b == min {
         if a != 0 && a != 1 { *overflow = 1; }
         return result;
     }
-    let sa: i64 = a >> (N - 1);
+    let sa: i64 = a >> (n - 1);
     let abs_a: i64 = (a ^ sa) - sa;
-    let sb: i64 = b >> (N - 1);
+    let sb: i64 = b >> (n - 1);
     let abs_b: i64 = (b ^ sb) - sb;
     if abs_a < 2 || abs_b < 2 {
         return result;
     }
-    if (sa == sb && abs_a > MAX / abs_b) || abs_a > MIN / -abs_b {
+    if (sa == sb && abs_a > max / abs_b) || abs_a > min / -abs_b {
         *overflow = 1;
     }
     return result;
@@ -119,10 +117,10 @@ pub fn __umoddi3(a: u64, b: u64) -> u64 {
 fn udivmoddi4(a: u64, b: u64) -> (u64, u64) {
     let n_uword_bits = size_of::<u32>() as i32 * 8;
     let n_udword_bits = size_of::<u64>() as i32 * 8;
-    let n: udwords;
-    let d: udwords;
-    let mut q: udwords;
-    let mut r: udwords;
+    let n: UdWords;
+    let d: UdWords;
+    let mut q: UdWords;
+    let mut r: UdWords;
     let mut sr: i32;
     unsafe {
         n = transmute(a);
@@ -160,7 +158,7 @@ fn udivmoddi4(a: u64, b: u64) -> (u64, u64) {
              */
             return unsafe { (
                 (n.high / d.high) as u64,
-                transmute(udwords {
+                transmute(UdWords {
                     high: n.high % d.high,
                     low: 0
                 })
@@ -173,7 +171,7 @@ fn udivmoddi4(a: u64, b: u64) -> (u64, u64) {
         if (d.high & (d.high - 1)) == 0 {   /* if d is a power of 2 */
             return unsafe { (
                 (n.high >> cttz32(d.high)) as u64,
-                transmute(udwords {
+                transmute(UdWords {
                     low: n.low,
                     high: n.high & (d.high - 1)
                 })
@@ -191,12 +189,12 @@ fn udivmoddi4(a: u64, b: u64) -> (u64, u64) {
         sr += 1;
         /* 1 <= sr <= n_uword_bits - 1 */
         /* q.all = n.all << (n_udword_bits - sr); */
-        q = udwords {
+        q = UdWords {
             low: 0,
             high: n.low << (n_uword_bits - sr)
         };
         /* r.all = n.all >> sr; */
-        r = udwords {
+        r = UdWords {
             high: n.high >> sr,
             low: (n.high << (n_uword_bits - sr)) | (n.low >> sr)
         };
@@ -213,7 +211,7 @@ fn udivmoddi4(a: u64, b: u64) -> (u64, u64) {
                     return (a, rem);
                 }
                 sr = unsafe { cttz32(d.low) };
-                q = udwords {
+                q = UdWords {
                     high: n.high >> sr,
                     low: (n.high << (n_uword_bits - sr)) | (n.low >> sr)
                 };
@@ -251,7 +249,7 @@ fn udivmoddi4(a: u64, b: u64) -> (u64, u64) {
              * }
              */
 
-            q = udwords {
+            q = UdWords {
                 high: ((n.low << ( n_uword_bits - sr))                       &
                       (((sr - n_uword_bits - 1) as i32) >> (n_uword_bits-1)))|
                       (((n.high << (n_udword_bits - sr))                     |
@@ -260,7 +258,7 @@ fn udivmoddi4(a: u64, b: u64) -> (u64, u64) {
                 low: (n.low << (n_udword_bits - sr)) &
                      (((n_uword_bits - sr) as i32) >> (n_uword_bits-1))
             };
-            r = udwords {
+            r = UdWords {
                 high: (n.high >> sr) &
                       (((sr - n_uword_bits) as i32) >> (n_uword_bits-1)),
                 low: ((n.high >> (sr - n_uword_bits))                       &
@@ -283,7 +281,7 @@ fn udivmoddi4(a: u64, b: u64) -> (u64, u64) {
             sr += 1;
             /* 1 <= sr <= n_uword_bits */
             /*  q.all = n.all << (n_udword_bits - sr); */
-            q = udwords {
+            q = UdWords {
                 high: n.low << (n_uword_bits - sr),
                 low: 0
             };
@@ -299,7 +297,7 @@ fn udivmoddi4(a: u64, b: u64) -> (u64, u64) {
              *     r.s.low = n.s.high;
              * }
              */
-            r = udwords {
+            r = UdWords {
                 high: (n.high >> sr) &
                      (((sr - n_uword_bits) as i32) >> (n_uword_bits-1)),
                 low: (n.high << (n_uword_bits - sr)) |
@@ -318,11 +316,11 @@ fn udivmoddi4(a: u64, b: u64) -> (u64, u64) {
     while sr > 0 { //for (; sr > 0; --sr)
         /* r:q = ((r:q)  << 1) | carry */
 
-        r = udwords {
+        r = UdWords {
             high: (r.high << 1) | (r.low  >> (n_uword_bits - 1)),
             low:  (r.low  << 1) | (q.high >> (n_uword_bits - 1))
         };
-        q = udwords {
+        q = UdWords {
             high: (q.high << 1) | (q.low  >> (n_uword_bits - 1)),
             low:  (q.low  << 1) | carry as i32
         };
@@ -334,13 +332,13 @@ fn udivmoddi4(a: u64, b: u64) -> (u64, u64) {
          * }
          */
         unsafe {
-            let s: u64 = (b - transmute::<udwords, u64>(r) - 1) >> (n_udword_bits - 1);
+            let s: u64 = (b - transmute::<UdWords, u64>(r) - 1) >> (n_udword_bits - 1);
             carry = s & 1;
-            r = transmute(transmute::<udwords, u64>(r) - transmute(d) & s);
+            r = transmute(transmute::<UdWords, u64>(r) - transmute(d) & s);
         }
     }
     return unsafe { (
-        transmute((transmute::<udwords, u64>(q) << 1) | carry),
+        transmute((transmute::<UdWords, u64>(q) << 1) | carry),
         transmute(r)
     ) };
 }

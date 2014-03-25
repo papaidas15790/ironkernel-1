@@ -38,35 +38,32 @@ pub unsafe fn init(width: u32, height: u32)
 
     // 800x600
     // See http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0225d/CACCCFBF.html
-    if (SCREEN_WIDTH == 800 && SCREEN_HEIGHT == 600)
-    {
-    	ws(0x10000010, 0x2CAC);
-    	ws(0x10120000, 0x1313A4C4);
-    	ws(0x10120004, 0x0505F657);
-    	ws(0x10120008, 0x071F1800);
+    if SCREEN_WIDTH == 800 && SCREEN_HEIGHT == 600 {
+        ws(0x10000010, 0x2CAC);
+        ws(0x10120000, 0x1313A4C4);
+        ws(0x10120004, 0x0505F657);
+        ws(0x10120008, 0x071F1800);
 
-	/* See http://forum.osdev.org/viewtopic.php?p=195000 */
-	ws(0x10120010, START_ADDR);
-	
-	/* See http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0161e/I911024.html */
-	ws(0x10120018, 0x82B);
+    /* See http://forum.osdev.org/viewtopic.php?p=195000 */
+        ws(0x10120010, START_ADDR);
+
+    /* See http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0161e/I911024.html */
+        ws(0x10120018, 0x82B);
     }
 
     // 640x480
     // See http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0225d/CACCCFBF.html
-    else if (SCREEN_WIDTH == 640 && SCREEN_HEIGHT == 480)
-    {
-	ws(0x10000010, 0x2C77);
-	ws(0x10120000, 0x3F1F3F9C);
-	ws(0x10120004, 0x090B61DF);
-	ws(0x10120008, 0x067F1800);
+    else if SCREEN_WIDTH == 640 && SCREEN_HEIGHT == 480 {
+        ws(0x10000010, 0x2C77);
+        ws(0x10120000, 0x3F1F3F9C);
+        ws(0x10120004, 0x090B61DF);
+        ws(0x10120008, 0x067F1800);
 
-	/* See http://forum.osdev.org/viewtopic.php?p=195000 */
-	ws(0x10120010, START_ADDR);
+    /* See http://forum.osdev.org/viewtopic.php?p=195000 */
+        ws(0x10120010, START_ADDR);
 
-	/* See http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0161e/I911024.html */
-	ws(0x10120018, 0x82B);
-
+    /* See http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0161e/I911024.html */
+        ws(0x10120018, 0x82B);
     }
     set_bg(0x222C38);
     set_fg(0xFAFCFF);
