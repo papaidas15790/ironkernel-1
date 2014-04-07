@@ -167,13 +167,6 @@ pub unsafe fn init() {
     buffer = strings::cstr::from_str(&"butts");
     screen();
     prompt(true);
-    let name = strings::cstr::from_str(&"Testing");
-    let contents = strings::cstr::from_str(&"Test file");
-    let mut test = filesys::FileNode::new(name, contents);
-    putcstr(test.data);
-    let name2 = strings::cstr::from_str(&"sdafsdfsad");
-    let contents2 = strings::cstr::from_str(&"work");
-    test.add(name2, contents2);
 }
 
 unsafe fn prompt(startup: bool) {
@@ -186,32 +179,49 @@ unsafe fn parse() {
 	putstr(&"\n");
 	putcstr(buffer);
 	if (buffer.streq(&"ls")) { 
-	    putstr( &"\na\tb") ;
-	    drawstr( &"\na    b") ;
+	    putstr( &"\nWould print directory contents") ;
+	    drawstr( &"\nWould print directory contents") ;
 	};
 	match buffer.getarg(' ', 0) {
 	    Some(y)        => {
 		if(y.streq(&"cat")) {
-		    match buffer.getarg(' ', 1) {
-			Some(x)        => {
-			    if(x.streq(&"a")) { 
-				putstr( &"\nHowdy!"); 
-				drawstr( &"\nHowdy!"); 
-			    }
-			    if(x.streq(&"b")) {
-				putstr( &"\nworld!");
-				drawstr( &"\nworld!");
-			    }
-			}
-			None        => { }
-		    };
+		   	putstr(&"\nPrinting file");
+		    drawstr(&"\nPrinting file");
+		    }
+		else if(y.streq(&"wr")) {
+		    putstr(&"\nWriting to file");
+		    drawstr(&"\nWriting to file");
 		}
-		if(y.streq(&"open")) {
-		    putstr(&"\nTEST YO");
-		    drawstr(&"\nTEST YO");
+		else if(y.streq(&"echo")) {
+				match buffer.getarg(' ', 1) {
+					Some(x) => {
+						putstr(&"\n");
+						putcstr( x );
+						drawstr( &"\nPrinted arg!");
+						}
+					None => { }
+				};
 		}
-	    }
+		else if(y.streq(&"rm")) {
+			putstr(&"\nRemoving file");
+		    drawstr(&"\nRemoving file");
+		}
+		else if(y.streq(&"cd")) {
+			putstr(&"\nChanging directory");
+		    drawstr(&"\nChanging directory");
+		}
+		else if(y.streq(&"mkdir")) {
+			putstr(&"\nMaking directory");
+		    drawstr(&"\nMaking directory");
+		};
+	}
 	    None        => { }
 	};
+
+	if(buffer.streq(&"pwd")) {
+		putstr(&"\nPrinting current directory");
+		drawstr(&"\nPrinting current directory");
+	};
+
 	buffer.reset();
 }
