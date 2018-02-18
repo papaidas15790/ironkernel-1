@@ -1,3 +1,4 @@
+# **WARNING: This repo is super old and comes from relatively early days of Rust. It is not meant as an example for how to build a kernel with modern Rust; nor will it work with modern Rust.**
 ironkernel
 --------
 ![][img]
